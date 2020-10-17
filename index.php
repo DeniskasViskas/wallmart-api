@@ -13,3 +13,5 @@
 		$config['prod']['walmart']['url'],
 		$config['prod']['walmart']['channel_type']
 	);
+
+	print_r($walmart_client->getFeedList());
