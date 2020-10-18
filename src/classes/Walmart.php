@@ -29,10 +29,10 @@
 		 * @return mixed
 		 * token time live 900
 		 */
-		private function getToken(){
+		private function getToken() {
 			$curl = curl_init();
 			curl_setopt_array($curl, [
-				CURLOPT_URL => $this->base_url."/token",
+				CURLOPT_URL => $this->base_url . "/token",
 				CURLOPT_RETURNTRANSFER => true,
 				CURLOPT_ENCODING => "",
 				CURLOPT_MAXREDIRS => 10,
@@ -41,18 +41,18 @@
 				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 				CURLOPT_CUSTOMREQUEST => "POST",
 				CURLOPT_POSTFIELDS => "grant_type=client_credentials",
-				CURLOPT_SSL_VERIFYHOST =>false,
-				CURLOPT_SSL_VERIFYPEER=>false,
-				CURLOPT_HTTPHEADER =>[
-					"Authorization: Basic ".base64_encode($this->client_id.':'.$this->client_secret),
+				CURLOPT_SSL_VERIFYHOST => false,
+				CURLOPT_SSL_VERIFYPEER => false,
+				CURLOPT_HTTPHEADER => [
+					"Authorization: Basic " . base64_encode($this->client_id . ':' . $this->client_secret),
 					"WM_SVC.NAME: Walmart Marketplace",
-					"WM_QOS.CORRELATION_ID:".uniqid(),
+					"WM_QOS.CORRELATION_ID:" . uniqid(),
 					"Content-Type: application/x-www-form-urlencoded",
 					"Accept: application/json"
 				],
 			]);
 			$response = json_decode(curl_exec($curl));
-			if (isset($response->access_token)){
+			if (isset($response->access_token)) {
 				return $response->access_token;
 			}
 			return $response;
@@ -64,16 +64,16 @@
 		 * @param int $limit
 		 * @return mixed
 		 */
-		public function getFeedList($feedId = null, $offset = 0, $limit = 50){
+		public function getFeedList($feedId = null, $offset = 0, $limit = 50) {
 			$curl = curl_init();
 			$get_params = [
-				'offset'=>$offset,
-				'limit'=>$limit,
+				'offset' => $offset,
+				'limit' => $limit,
 			];
-			if (!is_null($feedId)){
+			if (!is_null($feedId)) {
 				$get_params['feedId'] = $feedId;
 			}
-			$url = $this->base_url.'/feeds?'. http_build_query($get_params);
+			$url = $this->base_url . '/feeds?' . http_build_query($get_params);
 			curl_setopt_array($curl, [
 				CURLOPT_URL => $url,
 				CURLOPT_RETURNTRANSFER => true,
@@ -82,18 +82,138 @@
 				CURLOPT_FOLLOWLOCATION => true,
 				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 				CURLOPT_CUSTOMREQUEST => "GET",
-				CURLOPT_SSL_VERIFYHOST =>false,
-				CURLOPT_SSL_VERIFYPEER=>false,
-				CURLOPT_HTTPHEADER =>[
-					"Authorization: Basic ".base64_encode($this->client_id.':'.$this->client_secret),
+				CURLOPT_SSL_VERIFYHOST => false,
+				CURLOPT_SSL_VERIFYPEER => false,
+				CURLOPT_HTTPHEADER => [
+					"Authorization: Basic " . base64_encode($this->client_id . ':' . $this->client_secret),
 					"WM_SVC.NAME: Walmart Marketplace",
-					"WM_QOS.CORRELATION_ID:".uniqid(),
-					"WM_SEC.ACCESS_TOKEN:".$this->getToken(),
+					"WM_QOS.CORRELATION_ID:" . uniqid(),
+					"WM_SEC.ACCESS_TOKEN:" . $this->getToken(),
 					"Content-Type: application/x-www-form-urlencoded",
 					"Accept: application/json"
 				],
 			]);
 			$response = curl_exec($curl);
 			return json_decode($response);
+		}
+
+		/**
+		 * @param null $sku
+		 * @param int $offset
+		 * @param int $limit
+		 * @return mixed
+		 */
+		public function getItems($sku = null, $offset = 0, $limit = 50) {
+			$curl = curl_init();
+			$get_params = [
+				'offset' => $offset,
+				'limit' => $limit,
+				'nextCursor' => '*'
+			];
+			if (!is_null($sku)) {
+				$get_params['sku'] = $sku;
+			}
+			$url = $this->base_url . '/items?' . http_build_query($get_params);
+			curl_setopt_array($curl, [
+				CURLOPT_URL => $url,
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_MAXREDIRS => 10,
+				CURLOPT_TIMEOUT => 0,
+				CURLOPT_FOLLOWLOCATION => true,
+				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+				CURLOPT_CUSTOMREQUEST => "GET",
+				CURLOPT_SSL_VERIFYHOST => false,
+				CURLOPT_SSL_VERIFYPEER => false,
+				CURLOPT_HTTPHEADER => [
+					"Authorization: Basic " . base64_encode($this->client_id . ':' . $this->client_secret),
+					"WM_SVC.NAME: Walmart Marketplace",
+					"WM_QOS.CORRELATION_ID:" . uniqid(),
+					"WM_SEC.ACCESS_TOKEN:" . $this->getToken(),
+					"Content-Type: application/x-www-form-urlencoded",
+					"Accept: application/json"
+				],
+			]);
+			$response = curl_exec($curl);
+			return json_decode($response);
+		}
+
+		/**
+		 * @param $sku
+		 * @param int $shipNode
+		 * @return mixed
+		 */
+		public function getInventories($sku, $shipNode = 6) {
+			$curl = curl_init();
+			$get_params = [
+				'sku' => $sku,
+				'shipNode' => $shipNode
+			];
+			$url = $this->base_url . '/inventory?' . http_build_query($get_params);
+			curl_setopt_array($curl, [
+				CURLOPT_URL => $url,
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_MAXREDIRS => 10,
+				CURLOPT_TIMEOUT => 0,
+				CURLOPT_FOLLOWLOCATION => true,
+				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+				CURLOPT_CUSTOMREQUEST => "GET",
+				CURLOPT_SSL_VERIFYHOST => false,
+				CURLOPT_SSL_VERIFYPEER => false,
+				CURLOPT_HTTPHEADER => [
+					"Authorization: Basic " . base64_encode($this->client_id . ':' . $this->client_secret),
+					"WM_SVC.NAME: Walmart Marketplace",
+					"WM_QOS.CORRELATION_ID:" . uniqid(),
+					"WM_SEC.ACCESS_TOKEN:" . $this->getToken(),
+					"Content-Type: application/x-www-form-urlencoded",
+					"Accept: application/json"
+				],
+			]);
+			$response = curl_exec($curl);
+			return json_decode($response);
+		}
+
+		/**
+		 * @param string $sku
+		 * @param int $qty
+		 * @param int $shipNode
+		 * @return mixed
+		 */
+		public function updateInventories($sku, $qty, $shipNode = 6) {
+			$curl = curl_init();
+			$data = [
+				"sku" => $sku,
+				"availabilityCode" => "AC",
+				"quantity" => [
+					"unit" => "EACH",
+					"amount" => $qty
+				]
+			];
+			$get_params = [
+				'shipNode' => $shipNode
+			];
+			$url = $this->base_url . '/inventory?' . http_build_query($get_params);
+			curl_setopt_array($curl, [
+				CURLOPT_URL => $url,
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_MAXREDIRS => 10,
+				CURLOPT_TIMEOUT => 0,
+				CURLOPT_FOLLOWLOCATION => true,
+				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+				CURLOPT_CUSTOMREQUEST => "PUT",
+				CURLOPT_POSTFIELDS => json_encode($data),
+				CURLOPT_SSL_VERIFYHOST => false,
+				CURLOPT_SSL_VERIFYPEER => false,
+				CURLOPT_HTTPHEADER => [
+					"Authorization: Basic " . base64_encode($this->client_id . ':' . $this->client_secret),
+					"WM_SVC.NAME: Walmart Marketplace",
+					"WM_QOS.CORRELATION_ID:" . uniqid(),
+					"WM_SEC.ACCESS_TOKEN:" . $this->getToken(),
+					"Content-Type: application/json",
+					"Accept: application/json"
+				],
+			]);
+			$response = curl_exec($curl);
+			return json_decode($response);
+
 		}
 	}
