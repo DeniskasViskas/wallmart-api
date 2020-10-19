@@ -284,6 +284,41 @@
 			return $response;
 		}
 
+		public function bulkInventoryUpdate($itemArray,$shipNode = 6){
+			$xml = new SimpleXMLElement("<?xml version=\"1.0\" encoding=\"UTF-8\"?><InventoryFeed xmlns=\"http://walmart.com/\"></InventoryFeed>");
+			$curl = curl_init();
+			$get_params = [
+				'feedType' => 'inventory',
+				'shipNode'=> $shipNode
+			];
+			$url = $this->base_url . '/feeds?' . http_build_query($get_params);
+			curl_setopt_array($curl, [
+				CURLOPT_URL => $url,
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_MAXREDIRS => 10,
+				CURLOPT_TIMEOUT => 0,
+				CURLOPT_FOLLOWLOCATION => true,
+				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+				CURLOPT_CUSTOMREQUEST => "POST",
+				CURLOPT_POSTFIELDS => $this->array_to_xml($itemArray,$xml),
+				CURLOPT_SSL_VERIFYHOST => false,
+				CURLOPT_SSL_VERIFYPEER => false,
+				CURLOPT_HTTPHEADER => [
+					"Authorization: Basic " . base64_encode($this->client_id . ':' . $this->client_secret),
+					"WM_SVC.NAME: Walmart Marketplace",
+					"WM_QOS.CORRELATION_ID:" . uniqid(),
+					"WM_SEC.ACCESS_TOKEN:" . $this->getToken(),
+					"Content-Type: application/xml",
+					"Accept: application/json"
+				],
+			]);
+			$response = curl_exec($curl);
+			if (!is_null(json_decode($response))){
+				return json_decode($response);
+			}
+			return $response;
+		}
+
 		/**
 		 * @param string|null $sku
 		 * @param int $qty
