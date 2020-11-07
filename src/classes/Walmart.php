@@ -219,6 +219,7 @@
 				'feedType' => 'item'
 			];
 			$url = $this->base_url . '/feeds?' . http_build_query($get_params);
+			echo $this->array_to_xml($itemArray,$xml);
 			curl_setopt_array($curl, [
 				CURLOPT_URL => $url,
 				CURLOPT_RETURNTRANSFER => true,
@@ -251,12 +252,14 @@
 		 * @param int $shipNode
 		 * @return mixed
 		 */
-		public function getInventories($sku, $shipNode = 6) {
+		public function getInventories($sku, $shipNode = null) {
 			$curl = curl_init();
 			$get_params = [
 				'sku' => $sku,
-				'shipNode' => $shipNode
 			];
+			if (!is_null($shipNode)){
+				$get_params['shipNode'] = $shipNode;
+			}
 			$url = $this->base_url . '/inventory?' . http_build_query($get_params);
 			curl_setopt_array($curl, [
 				CURLOPT_URL => $url,
@@ -284,13 +287,20 @@
 			return $response;
 		}
 
-		public function bulkInventoryUpdate($itemArray,$shipNode = 6){
+		/**
+		 * @param $itemArray
+		 * @param int $shipNode
+		 * @return bool|mixed|string
+		 */
+		public function bulkInventoryUpdate($itemArray, $shipNode = null){
 			$xml = new SimpleXMLElement("<?xml version=\"1.0\" encoding=\"UTF-8\"?><InventoryFeed xmlns=\"http://walmart.com/\"></InventoryFeed>");
 			$curl = curl_init();
 			$get_params = [
 				'feedType' => 'inventory',
-				'shipNode'=> $shipNode
 			];
+			if (!is_null($shipNode)){
+				$get_params['shipNode'] = $shipNode;
+			}
 			$url = $this->base_url . '/feeds?' . http_build_query($get_params);
 			curl_setopt_array($curl, [
 				CURLOPT_URL => $url,
@@ -325,7 +335,7 @@
 		 * @param int $shipNode
 		 * @return mixed
 		 */
-		public function updateInventories($sku, $qty, $shipNode = 6) {
+		public function updateInventories($sku, $qty, $shipNode = null) {
 			$curl = curl_init();
 			$data = [
 				"sku" => $sku,
@@ -335,9 +345,12 @@
 					"amount" => $qty
 				]
 			];
-			$get_params = [
-				'shipNode' => $shipNode
-			];
+			$get_params = [];
+			if (!is_null($shipNode)){
+				$get_params = [
+					'shipNode' => $shipNode
+				];
+			}
 			$url = $this->base_url . '/inventory?' . http_build_query($get_params);
 			curl_setopt_array($curl, [
 				CURLOPT_URL => $url,
@@ -366,6 +379,10 @@
 			return $response;
 		}
 
+		/**
+		 * @param $sku
+		 * @return bool|mixed|string
+		 */
 		public function deleteItem($sku){
 			$curl = curl_init();
 			$url = $this->base_url . '/items/'.$sku;
@@ -377,6 +394,73 @@
 				CURLOPT_FOLLOWLOCATION => true,
 				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 				CURLOPT_CUSTOMREQUEST => "DELETE",
+				CURLOPT_SSL_VERIFYHOST => false,
+				CURLOPT_SSL_VERIFYPEER => false,
+				CURLOPT_HTTPHEADER => [
+					"Authorization: Basic " . base64_encode($this->client_id . ':' . $this->client_secret),
+					"WM_SVC.NAME: Walmart Marketplace",
+					"WM_QOS.CORRELATION_ID:" . uniqid(),
+					"WM_SEC.ACCESS_TOKEN:" . $this->getToken(),
+					"Content-Type: application/json",
+					"Accept: application/json"
+				],
+			]);
+			$response = curl_exec($curl);
+			if (!is_null(json_decode($response))){
+				return json_decode($response);
+			}
+			return $response;
+		}
+
+		/**
+		 * @param array $filter
+		 * @return bool|mixed|string
+		 */
+		public function getAllReleasedOrders($filter){
+			$curl = curl_init();
+			$url = $this->base_url . '/orders/released?' . http_build_query($filter);
+			echo $url."\n";
+			curl_setopt_array($curl, [
+				CURLOPT_URL => $url,
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_MAXREDIRS => 10,
+				CURLOPT_TIMEOUT => 0,
+				CURLOPT_FOLLOWLOCATION => true,
+				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+				CURLOPT_CUSTOMREQUEST => "GET",
+				CURLOPT_SSL_VERIFYHOST => false,
+				CURLOPT_SSL_VERIFYPEER => false,
+				CURLOPT_HTTPHEADER => [
+					"Authorization: Basic " . base64_encode($this->client_id . ':' . $this->client_secret),
+					"WM_SVC.NAME: Walmart Marketplace",
+					"WM_QOS.CORRELATION_ID:" . uniqid(),
+					"WM_SEC.ACCESS_TOKEN:" . $this->getToken(),
+					"Content-Type: application/x-www-form-urlencoded",
+					"Accept: application/json"
+				],
+			]);
+			$response = curl_exec($curl);
+			if (!is_null(json_decode($response))){
+				return json_decode($response);
+			}
+			return $response;
+		}
+
+		/**
+		 * @param string $purchaseOrderId
+		 * @return bool|mixed|string
+		 */
+		public function acknowledgeOrder($purchaseOrderId){
+			$curl = curl_init();
+			$url = $this->base_url . "/orders/$purchaseOrderId/acknowledge";
+			curl_setopt_array($curl, [
+				CURLOPT_URL => $url,
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_MAXREDIRS => 10,
+				CURLOPT_TIMEOUT => 0,
+				CURLOPT_FOLLOWLOCATION => true,
+				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+				CURLOPT_CUSTOMREQUEST => "POST",
 				CURLOPT_SSL_VERIFYHOST => false,
 				CURLOPT_SSL_VERIFYPEER => false,
 				CURLOPT_HTTPHEADER => [

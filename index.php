@@ -13,4 +13,5 @@
 		$config['prod']['walmart']['url'],
 		$config['prod']['walmart']['channel_type']
 	);
-	#SFBR1174
+//	print_r($walmart_client->getAllReleasedOrders(['createdStartDate'=>date('Y-m-d',strtotime('-2day'))]));
+	print_r($walmart_client->getAllReleasedOrders(['createdStartDate'=>date('Y-m-d',strtotime('-2day'))]));

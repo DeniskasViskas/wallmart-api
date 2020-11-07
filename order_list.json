@@ -1,0 +1,180 @@
+{
+	"list": {
+		"meta": {
+			"totalCount": 25228,
+			"limit": 10,
+			"nextCursor": "?limit=10&hasMoreElements=true&soIndex=25228&poIndex=10&sellerId=152&createdStartDate=2019-04-02T00:00:00.000Z&createdEndDate=2019-09-26T16:05:49.648Z"
+		},
+		"elements": {
+			"order": [
+				{
+					"purchaseOrderId": "4792701510371",
+					"customerOrderId": "5401973367419",
+					"customerEmailId": "47B81ACD2C62434DBE64F47B9E1F7630@relay.walmart.com",
+					"orderDate": 1569513584000,
+					"shippingInfo": {
+						"phone": "2134488377",
+						"estimatedDeliveryDate": 1569870000000,
+						"estimatedShipDate": 1569553200000,
+						"methodCode": "Express",
+						"postalAddress": {
+							"name": "Julio Hernandez",
+							"address1": "9713 pleasant view dr",
+							"address2": null,
+							"city": "Rancho Cucamonga",
+							"state": "CA",
+							"postalCode": "91701",
+							"country": "USA",
+							"addressType": "RESIDENTIAL"
+						}
+					},
+					"orderLines": {
+						"orderLine": [
+							{
+								"lineNumber": "1",
+								"item": {
+									"productName": "Refurbished Lenovo YB1-X90F Grey Yoga Book with WiFi 10.1\" Touchscreen Tablet Android 6.0.1",
+									"sku": "VO190403007727R"
+								},
+								"charges": {
+									"charge": [
+										{
+											"chargeType": "PRODUCT",
+											"chargeName": "ItemPrice",
+											"chargeAmount": {
+												"currency": "USD",
+												"amount": 259
+											},
+											"tax": {
+												"taxName": "Tax1",
+												"taxAmount": {
+													"currency": "USD",
+													"amount": 20.07
+												}
+											}
+										},
+										{
+											"chargeType": "FEE",
+											"chargeName": "Fee",
+											"chargeAmount": {
+												"currency": "USD",
+												"amount": 0
+											},
+											"tax": {
+												"taxName": "Electronic Waste Recycling Fee",
+												"taxAmount": {
+													"currency": "USD",
+													"amount": 5
+												}
+											}
+										}
+									]
+								},
+								"orderLineQuantity": {
+									"unitOfMeasurement": "EACH",
+									"amount": "1"
+								},
+								"statusDate": 1569513724000,
+								"orderLineStatuses": {
+									"orderLineStatus": [
+										{
+											"status": "Acknowledged",
+											"statusQuantity": {
+												"unitOfMeasurement": "EACH",
+												"amount": "1"
+											},
+											"cancellationReason": null,
+											"trackingInfo": null,
+											"returnCenterAddress": null
+										}
+									]
+								},
+								"refund": null,
+								"fulfillment": {
+									"fulfillmentOption": "S2H",
+									"shipMethod": "EXPEDITED",
+									"storeId": null,
+									"pickUpDateTime": 1569870000000,
+									"pickUpBy": null,
+									"shippingProgramType": "TWO_DAY"
+								}
+							},
+							{
+								"lineNumber": "2",
+								"item": {
+									"productName": "Refurbished Lenovo YB1-X90F Grey Yoga Book with WiFi 10.1\" Touchscreen Tablet Android 6.0.1",
+									"sku": "VO190403007727R++"
+								},
+								"charges": {
+									"charge": [
+										{
+											"chargeType": "PRODUCT",
+											"chargeName": "ItemPrice",
+											"chargeAmount": {
+												"currency": "USD",
+												"amount": 259
+											},
+											"tax": {
+												"taxName": "Tax1",
+												"taxAmount": {
+													"currency": "USD",
+													"amount": 20.07
+												}
+											}
+										},
+										{
+											"chargeType": "FEE",
+											"chargeName": "Fee",
+											"chargeAmount": {
+												"currency": "USD",
+												"amount": 0
+											},
+											"tax": {
+												"taxName": "Electronic Waste Recycling Fee",
+												"taxAmount": {
+													"currency": "USD",
+													"amount": 5
+												}
+											}
+										}
+									]
+								},
+								"orderLineQuantity": {
+									"unitOfMeasurement": "EACH",
+									"amount": "1"
+								},
+								"statusDate": 1569513724000,
+								"orderLineStatuses": {
+									"orderLineStatus": [
+										{
+											"status": "Acknowledged",
+											"statusQuantity": {
+												"unitOfMeasurement": "EACH",
+												"amount": "1"
+											},
+											"cancellationReason": null,
+											"trackingInfo": null,
+											"returnCenterAddress": null
+										}
+									]
+								},
+								"refund": null,
+								"fulfillment": {
+									"fulfillmentOption": "S2H",
+									"shipMethod": "EXPEDITED",
+									"storeId": null,
+									"pickUpDateTime": 1569870000000,
+									"pickUpBy": null,
+									"shippingProgramType": "TWO_DAY"
+								}
+							}
+						]
+					},
+					"shipNode": {
+						"type": "3PLFulfilled"
+					}
+				}
+			]
+		}
+	}
+}
